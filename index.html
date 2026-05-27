@@ -3,19 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Make Kindred — Something is coming</title>
+  <title>Make Kindred — Across Every Divide</title>
 
   <!-- Adobe Web SDK -->
   <script src="https://cdn1.adoberesources.net/alloy/2.19.2/alloy.min.js" async></script>
   <script>
-    // ─────────────────────────────────────────────
-    // ADOBE WEB SDK CONFIG
-    // Replace these two values after setting up your
-    // Datastream in Adobe Data Collection
-    // ─────────────────────────────────────────────
     var DATASTREAM_ID = "YOUR_DATASTREAM_ID";
     var ORG_ID        = "YOUR_ORG_ID@AdobeOrg";
-    // ─────────────────────────────────────────────
 
     !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);
 
@@ -26,148 +20,144 @@
         clickCollectionEnabled: true,
         defaultConsent: "in"
       });
-
-      // Auto page view event
       alloy("sendEvent", {
         xdm: {
           eventType: "web.webpagedetails.pageViews",
-          web: {
-            webPageDetails: {
-              name: "Make Kindred Home",
-              URL: window.location.href
-            }
-          }
+          web: { webPageDetails: { name: "Make Kindred Home", URL: window.location.href } }
         }
       });
     });
 
-    // Email signup event
     function handleSignup(email) {
       alloy("sendEvent", {
         xdm: {
           eventType: "web.formFilledOut",
-          web: {
-            webPageDetails: { name: "Make Kindred Home" }
-          },
-          _experience: {
-            analytics: {
-              customDimensions: {
-                eVars: { eVar1: "email-signup" }
-              }
-            }
-          }
-        },
-        data: {
-          __adobe: {
-            analytics: {
-              events: "event1",
-              eVar1: "email-signup"
-            }
-          }
+          web: { webPageDetails: { name: "Make Kindred Home" } }
         }
       });
-      console.log("[Make Kindred] Signup event sent for:", email);
     }
 
-    // CTA click event
     function handleCTAClick(label) {
       alloy("sendEvent", {
         xdm: {
           eventType: "web.webinteraction.linkClicks",
           web: {
-            webInteraction: {
-              name: label,
-              type: "other",
-              linkClicks: { value: 1 }
-            },
+            webInteraction: { name: label, type: "other", linkClicks: { value: 1 } },
             webPageDetails: { name: "Make Kindred Home" }
           }
         }
       });
-      console.log("[Make Kindred] CTA click event sent:", label);
+    }
+
+    function handleStoryOpen(title) {
+      alloy("sendEvent", {
+        xdm: {
+          eventType: "web.webinteraction.linkClicks",
+          web: {
+            webInteraction: { name: "story-open: " + title, type: "other", linkClicks: { value: 1 } },
+            webPageDetails: { name: "Make Kindred Home" }
+          }
+        }
+      });
     }
   </script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink:    #1a1714;
-      --warm:   #c8a97e;
-      --muted:  #8a7f74;
-      --sand:   #f4f0ea;
-      --cream:  #faf8f5;
+      --ink:   #1a1714;
+      --warm:  #c8a97e;
+      --muted: #8a7f74;
+      --sand:  #f4f0ea;
+      --cream: #faf8f5;
+      --rule:  rgba(0,0,0,0.07);
     }
 
-    html, body {
-      height: 100%;
+    html { scroll-behavior: smooth; }
+
+    body {
       background: var(--cream);
       color: var(--ink);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
       min-height: 100vh;
     }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
-      padding: 32px 48px;
+      padding: 28px 56px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
+      border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      background: rgba(250,248,245,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 10;
     }
 
     .wordmark {
       font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: 22px;
-      letter-spacing: 0.12em;
+      font-weight: 400;
+      font-size: 20px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--ink);
       text-decoration: none;
     }
 
-    .nav-status {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
     }
 
-    /* HERO */
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 80px 32px;
-      gap: 40px;
+    .nav-link {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
     }
+    .nav-link:hover { color: var(--warm); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 56px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-left {}
 
     .eyebrow {
       font-size: 11px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--warm);
+      margin-bottom: 24px;
+      display: block;
     }
 
     h1 {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
-      font-size: clamp(48px, 8vw, 88px);
-      line-height: 1.05;
+      font-size: clamp(44px, 5vw, 68px);
+      line-height: 1.08;
       letter-spacing: -0.01em;
       color: var(--ink);
-      max-width: 700px;
+      margin-bottom: 28px;
     }
 
     h1 em {
@@ -175,105 +165,380 @@
       color: var(--warm);
     }
 
-    .sub {
-      font-size: 16px;
-      line-height: 1.7;
+    .hero-body {
+      font-size: 15px;
+      line-height: 1.8;
       color: var(--muted);
-      max-width: 420px;
+      margin-bottom: 40px;
+      max-width: 400px;
     }
 
-    /* SIGNUP */
     .signup-form {
       display: flex;
-      gap: 0;
-      width: 100%;
-      max-width: 400px;
-      border: 1px solid rgba(0,0,0,0.12);
-      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
       overflow: hidden;
       background: white;
+      max-width: 380px;
     }
 
     .signup-form input {
       flex: 1;
       border: none;
-      padding: 14px 18px;
-      font-size: 14px;
+      padding: 13px 16px;
+      font-size: 13.5px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       color: var(--ink);
-      background: transparent;
       outline: none;
+      background: transparent;
     }
 
-    .signup-form input::placeholder {
-      color: var(--muted);
-    }
+    .signup-form input::placeholder { color: rgba(138,127,116,0.6); }
 
     .signup-form button {
-      padding: 14px 22px;
+      padding: 13px 20px;
       background: var(--ink);
       color: var(--cream);
       border: none;
-      font-size: 12px;
+      font-size: 11px;
       font-family: 'DM Sans', sans-serif;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background 0.2s;
       white-space: nowrap;
     }
-
-    .signup-form button:hover {
-      background: var(--warm);
-    }
+    .signup-form button:hover { background: var(--warm); }
 
     .signup-confirm {
       font-size: 13px;
       color: var(--warm);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       display: none;
+      padding: 13px 0;
     }
 
-    /* SECONDARY CTA */
-    .cta-row {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .hero-right {
+      position: relative;
     }
 
-    .btn-ghost {
-      padding: 11px 24px;
-      border: 1px solid rgba(0,0,0,0.15);
-      border-radius: 3px;
-      font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      letter-spacing: 0.04em;
+    .hero-manifesto {
+      background: var(--sand);
+      border-left: 3px solid var(--warm);
+      padding: 40px 44px;
+      border-radius: 2px;
+    }
+
+    .manifesto-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .manifesto-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.6;
+      color: var(--ink);
+      font-style: italic;
+    }
+
+    .manifesto-text strong {
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .manifesto-attribution {
+      margin-top: 24px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
       color: var(--muted);
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
       text-transform: uppercase;
     }
 
-    .btn-ghost:hover {
-      border-color: var(--warm);
+    /* ── MISSION STRIP ── */
+    .mission-strip {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--sand);
+      padding: 56px;
+    }
+
+    .mission-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 56px;
+    }
+
+    .mission-item {}
+
+    .mission-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: rgba(200,169,126,0.3);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .mission-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .mission-desc {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    /* ── STORIES ── */
+    .stories-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 56px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 36px;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .story-card {
+      cursor: pointer;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+      background: white;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .story-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+
+    .card-image {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-body {
+      padding: 28px 28px 32px;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card-excerpt {
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: rgba(138,127,116,0.7);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card-read-more {
+      color: var(--warm);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ARTICLE OVERLAY ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,23,20,0.5);
+      z-index: 100;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .article-panel {
+      background: var(--cream);
+      max-width: 720px;
+      width: 100%;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .article-header-image {
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+    }
+
+    .article-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      transition: background 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .article-close:hover { background: white; }
+
+    .article-content {
+      padding: 48px 56px 64px;
+    }
+
+    .article-tag {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .article-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 40px;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .article-byline {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .article-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 1.8;
+      color: var(--ink);
+    }
+
+    .article-body p { margin-bottom: 24px; }
+
+    .article-body p:first-child::first-letter {
+      font-size: 64px;
+      font-weight: 300;
+      float: left;
+      line-height: 0.85;
+      margin-right: 8px;
+      margin-top: 6px;
       color: var(--warm);
     }
 
-    /* DIVIDER */
-    .divider {
-      width: 40px;
-      height: 1px;
-      background: var(--warm);
-      opacity: 0.5;
+    .article-pullquote {
+      border-left: 3px solid var(--warm);
+      margin: 36px 0;
+      padding: 20px 32px;
+      background: var(--sand);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.6;
+      color: var(--ink);
     }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer {
-      padding: 28px 48px;
-      border-top: 1px solid rgba(0,0,0,0.06);
+      border-top: 1px solid var(--rule);
+      padding: 32px 56px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -282,65 +547,255 @@
       letter-spacing: 0.04em;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--warm); }
 
-    @media (max-width: 600px) {
-      nav { padding: 24px; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .hero { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+      .hero-body { max-width: 100%; }
+      .mission-inner { grid-template-columns: 1fr; gap: 32px; }
+      .mission-strip { padding: 40px 24px; }
+      .stories-section { padding: 60px 24px; }
+      .stories-grid { grid-template-columns: 1fr; }
+      .article-content { padding: 32px 28px 48px; }
+      .article-title { font-size: 30px; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- NAV -->
   <nav>
     <a href="/" class="wordmark">Make Kindred</a>
-    <span class="nav-status">Coming Soon</span>
+    <div class="nav-right">
+      <span class="nav-link" onclick="document.querySelector('.stories-section').scrollIntoView({behavior:'smooth'}); handleCTAClick('nav-stories')">Stories</span>
+      <span class="nav-link" onclick="document.querySelector('.mission-strip').scrollIntoView({behavior:'smooth'}); handleCTAClick('nav-mission')">Our Mission</span>
+      <span class="nav-link" onclick="handleCTAClick('nav-join')">Join Us</span>
+    </div>
   </nav>
 
-  <main>
-    <span class="eyebrow">Something is taking shape</span>
-
-    <h1>Built for the people<br>who <em>make things</em> together</h1>
-
-    <p class="sub">
-      Kindred is a new kind of creative workspace — where context flows, work finds the right hands, and nothing falls through the cracks.
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="signup-form" id="signupForm">
-      <input type="email" id="emailInput" placeholder="your@email.com" />
-      <button onclick="submitSignup()">Notify me</button>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <span class="eyebrow">Across every divide</span>
+      <h1>Where difference<br>becomes <em>understanding</em></h1>
+      <p class="hero-body">
+        Make Kindred is a platform for people who believe the distance between us is smaller than it seems. We bring together individuals and communities of opposing views, lived experiences, and deep convictions — not to erase what divides them, but to discover what's possible when they stay in the room.
+      </p>
+      <div class="signup-form" id="signupForm">
+        <input type="email" id="emailInput" placeholder="your@email.com" />
+        <button onclick="submitSignup()">Join the movement</button>
+      </div>
+      <p class="signup-confirm" id="signupConfirm">You're in. Something meaningful is coming.</p>
     </div>
-    <p class="signup-confirm" id="signupConfirm">You're on the list. We'll be in touch.</p>
-
-    <div class="cta-row">
-      <button class="btn-ghost" onclick="handleCTAClick('learn-more')">Learn More</button>
-      <button class="btn-ghost" onclick="handleCTAClick('request-access')">Request Early Access</button>
+    <div class="hero-right">
+      <div class="hero-manifesto">
+        <span class="manifesto-label">Our belief</span>
+        <p class="manifesto-text">
+          "The opposite of division is not agreement — it is <strong>presence</strong>. The willingness to be in the same room, to hear the same silence, to share the same uncertainty about what comes next."
+        </p>
+        <p class="manifesto-attribution">— Make Kindred Founding Principles</p>
+      </div>
     </div>
-  </main>
+  </section>
 
+  <!-- MISSION STRIP -->
+  <section class="mission-strip">
+    <div class="mission-inner">
+      <div class="mission-item">
+        <div class="mission-number">01</div>
+        <div class="mission-title">Honest Encounter</div>
+        <p class="mission-desc">We don't ask people to leave their convictions at the door. Real dialogue requires showing up fully — with your history, your faith, your wounds, your certainty. Make Kindred creates conditions where all of that is welcome.</p>
+      </div>
+      <div class="mission-item">
+        <div class="mission-number">02</div>
+        <div class="mission-title">Structured Trust</div>
+        <p class="mission-desc">Meaningful connection across difference doesn't happen by accident. Our frameworks are designed by researchers, mediators, and community leaders who have spent careers learning what makes people willing to be changed by each other.</p>
+      </div>
+      <div class="mission-item">
+        <div class="mission-number">03</div>
+        <div class="mission-title">Lasting Outcomes</div>
+        <p class="mission-desc">We measure success not in agreements reached but in relationships formed. The goal is people who walk away with a neighbor they didn't have before — and a story they couldn't have written alone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORIES -->
+  <section class="stories-section">
+    <div class="section-header">
+      <div>
+        <span class="section-label">From the field</span>
+        <h2>When people stayed<br>in the room</h2>
+      </div>
+    </div>
+
+    <div class="stories-grid">
+
+      <div class="story-card" onclick="openStory('ranchers')">
+        <div class="card-image" style="background: linear-gradient(135deg, #d4c4a8, #b8a882);">
+          <span style="font-size:52px;">🌾</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Land & Environment</span>
+          <h3 class="card-title">The Ranchers and the Climate Scientists</h3>
+          <p class="card-excerpt">In a drought-stricken corner of southeastern Utah, two groups who had never trusted each other's motives built something neither thought possible: a shared water stewardship covenant that has lasted eight years.</p>
+          <div class="card-meta">
+            <span>Moab, Utah · 2017</span>
+            <span class="card-read-more">Read →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-card" onclick="openStory('veterans')">
+        <div class="card-image" style="background: linear-gradient(135deg, #c4ccd4, #9aa4ae);">
+          <span style="font-size:52px;">🕊️</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Service & Conscience</span>
+          <h3 class="card-title">Veterans and Peace Activists, Building Together</h3>
+          <p class="card-excerpt">Twelve combat veterans and twelve longtime anti-war organizers agreed to spend a weekend together with no agenda other than to listen. What emerged changed the trajectory of a mental health bill in three states.</p>
+          <div class="card-meta">
+            <span>Fayetteville, NC · 2020</span>
+            <span class="card-read-more">Read →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-card" onclick="openStory('congregation')">
+        <div class="card-image" style="background: linear-gradient(135deg, #d4c0c8, #b89aa8);">
+          <span style="font-size:52px;">🏘️</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Faith & Community</span>
+          <h3 class="card-title">A Congregation and Its Neighborhood</h3>
+          <p class="card-excerpt">A conservative evangelical church and its largely secular, progressive neighbors had coexisted in mutual suspicion for a decade. A housing crisis forced them to the same table — and revealed that their values were closer than their politics.</p>
+          <div class="card-meta">
+            <span>Portland, OR · 2022</span>
+            <span class="card-read-more">Read →</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer>
     <span>© 2026 Make Kindred</span>
     <div class="footer-links">
+      <a href="#" onclick="handleCTAClick('footer-about')">About</a>
       <a href="#" onclick="handleCTAClick('footer-privacy')">Privacy</a>
       <a href="#" onclick="handleCTAClick('footer-contact')">Contact</a>
     </div>
   </footer>
 
+  <!-- ARTICLE OVERLAY -->
+  <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+    <div class="article-panel" id="articlePanel">
+      <button class="article-close" onclick="closeStory()">✕</button>
+      <div class="article-header-image" id="articleImage"></div>
+      <div class="article-content">
+        <span class="article-tag" id="articleTag"></span>
+        <h1 class="article-title" id="articleTitle"></h1>
+        <p class="article-byline" id="articleByline"></p>
+        <div class="article-body" id="articleBody"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // ── STORIES DATA ──
+    var stories = {
+      ranchers: {
+        tag: "Land & Environment",
+        title: "The Ranchers and the Climate Scientists",
+        byline: "Moab, Utah · 2017 · 8 min read",
+        image: "🌾",
+        imageBg: "linear-gradient(135deg, #d4c4a8, #b8a882)",
+        body: `
+          <p>When hydrologist Dana Ferris first drove out to the Harmon family ranch in the spring of 2016, she expected resistance. She got a locked gate and a hand-lettered sign that read: "No Government. No University. No Exceptions."</p>
+          <p>The Harmons had been running cattle on their 4,000-acre spread outside Moab for four generations. They had watched water levels in the Colorado River system drop for thirty years, and they had their own explanations for why — most of which did not involve carbon emissions or climate modeling. What they knew was that their livelihood was drying up, literally, and that the scientists who showed up with clipboards and confident pronouncements had never once asked them what they had observed with their own eyes over a lifetime on the land.</p>
+          <div class="article-pullquote">"She asked me what I had noticed about the winter snowpack over the last twenty years. Nobody from the university had ever asked me that before. They usually just told me."<br><br>— Dale Harmon, rancher</div>
+          <p>Ferris came back three more times that spring, always alone, always without a clipboard. She brought no data on those visits — only questions. What had the Harmons noticed about the timing of spring runoff? What did the soil look and feel like compared to when Dale's father ran the operation? When had they first seen the seeps dry up along the east ridge?</p>
+          <p>What she was doing, though she didn't name it this way to the Harmons, was practicing what her mentor called "knowledge reconciliation" — a structured approach to bridging scientific and empirical knowledge systems by finding the places where they observe the same phenomena through different frameworks.</p>
+          <p>By late summer, something remarkable had happened. Dale Harmon, who had not spoken to a university researcher without a lawyer present for a decade, began calling Ferris to report what he was seeing. Not because he had changed his views on climate policy — he hadn't — but because he had found, for the first time, a scientist who seemed to believe that what he saw mattered.</p>
+          <div class="article-pullquote">"We don't agree on why it's happening. We still don't, really. But we agree on what's happening, and we agree we both need it to stop."<br><br>— Dana Ferris, hydrologist</div>
+          <p>The water stewardship covenant they eventually drafted — alongside seven other ranching families and a team of four researchers from two universities — has no political language in it anywhere. It does not mention climate change. It does not mention policy. It describes, in precise and practical terms, what each party commits to doing and observing on their respective land, and how they will share that information with each other and with the river basin authority.</p>
+          <p>Eight years later, the covenant is still active. Three of the families have expanded their participation. One of the researchers has a standing invitation to the Harmon family's Thanksgiving table. And the stretch of creek that runs through the eastern edge of the ranch — which had been dry eleven months of the year for nearly a decade — now runs for seven.</p>
+        `
+      },
+      veterans: {
+        tag: "Service & Conscience",
+        title: "Veterans and Peace Activists, Building Together",
+        byline: "Fayetteville, NC · 2020 · 9 min read",
+        image: "🕊️",
+        imageBg: "linear-gradient(135deg, #c4ccd4, #9aa4ae)",
+        body: `
+          <p>Marcus Webb spent fourteen months in Kandahar Province. He came home with a Purple Heart, a traumatic brain injury, and a conviction that the war had been worth it. He had never, in his adult life, had a conversation with someone who disagreed with that last part.</p>
+          <p>Sylvia Okonkwo had been arrested eleven times at anti-war demonstrations over twenty years. She believed, with equal conviction, that the wars Marcus had fought were not only wrong but had caused immeasurable and largely invisible suffering to the communities surrounding the bases where young men and women were prepared to go die. She had never, in her adult life, spoken to one of those young men or women outside of a protest line.</p>
+          <p>In October of 2020, they were both invited to a three-day gathering outside Fayetteville, organized by a small nonprofit that had spent two years quietly reaching out to both communities. The ground rules were simple: no policy discussion for the first twenty-four hours. Only stories.</p>
+          <div class="article-pullquote">"I had built up this idea of who she was. And she had built up this idea of who I was. Neither of us was wrong, exactly. But neither of us was complete."<br><br>— Marcus Webb, U.S. Army veteran</div>
+          <p>What the organizers understood — and had learned from three previous failed attempts at similar gatherings — was that the policy disagreement was not the real barrier. The real barrier was that neither group believed the other had fully grappled with the cost of their position. Veterans felt that peace activists had never truly sat with the reality of what the absence of military intervention sometimes meant. Activists felt that veterans had never truly sat with the reality of what military intervention sometimes meant to the people on the other end of it.</p>
+          <p>The first evening was nearly silent. Several participants nearly left. One did.</p>
+          <p>By the second morning, something had shifted. Marcus and Sylvia found themselves in a corner of the dining hall at 6 a.m., both unable to sleep, both talking about their fathers. Neither conversation had anything to do with the war.</p>
+          <p>The mental health bill that emerged from the connections formed at that gathering — and three subsequent ones — was not a compromise document. It was something stranger and more durable: a piece of legislation co-authored by people who still disagreed profoundly about the use of military force, but who had found a shared conviction that the human cost of that force, regardless of its justification, demanded a serious and adequately funded response.</p>
+          <div class="article-pullquote">"We didn't solve the argument. I don't think the argument is solvable. But we found something we could build together inside of it."<br><br>— Sylvia Okonkwo, peace organizer</div>
+          <p>The bill passed in North Carolina, Virginia, and Georgia within eighteen months. Marcus Webb testified at two of the three hearings. Sylvia Okonkwo sat behind him in the gallery at each one.</p>
+        `
+      },
+      congregation: {
+        tag: "Faith & Community",
+        title: "A Congregation and Its Neighborhood",
+        byline: "Portland, OR · 2022 · 7 min read",
+        image: "🏘️",
+        imageBg: "linear-gradient(135deg, #d4c0c8, #b89aa8)",
+        body: `
+          <p>For ten years, Riverside Community Church and the surrounding neighborhood had managed a particular kind of urban coexistence: politely invisible to each other, occasionally hostile, and mutually convinced that the other side fundamentally did not understand what a neighborhood was for.</p>
+          <p>The congregation — about 340 families, theologically conservative, predominantly white — had been in the neighborhood since 1987, when the area was different in nearly every way. The neighborhood it now occupied was younger, more secular, more diverse, and had been watching housing costs make long-term residency increasingly impossible for anyone who wasn't already there. The church, with its underutilized parking lot and its large fellowship hall, sat at the center of a block that had become, in the eyes of many neighbors, a symbol of institutional indifference.</p>
+          <p>Pastor Ellen Cho did not disagree with that characterization. She had been at Riverside for three years and had spent most of them trying to understand why a congregation that genuinely believed in loving its neighbors had somehow ended up in a posture of managed separation from them.</p>
+          <div class="article-pullquote">"We had all the theology of proximity. We just didn't have any actual proximity. I kept asking myself: at what point does the gap between what we believe and what we do become the thing we actually believe?"<br><br>— Pastor Ellen Cho, Riverside Community Church</div>
+          <p>The housing crisis provided the collision neither side had been willing to seek. When a developer announced plans to convert a nearby affordable apartment complex into luxury units, both the congregation and the neighborhood coalition found themselves at the same city council meeting, making the same argument, sitting on opposite sides of the room.</p>
+          <p>A city mediator who had observed both groups suggested they meet. The first meeting lasted forty-five minutes and produced nothing except a mutual agreement to meet again. The second produced an argument that nearly ended the process entirely, when a neighborhood organizer told Pastor Cho that the church's silence on housing over the past decade had been "a kind of violence." Cho did not rebut the claim. She asked if she could think about it for a week and respond.</p>
+          <p>When she came back, she brought with her a proposal: Riverside would commit its parking lot to a permanently affordable housing development, financed through a community land trust model, with the neighborhood coalition holding two seats on the governing board. In exchange, she asked only that the coalition be willing to have a genuine conversation — not a debate — about what faith communities could offer to the housing movement that purely secular organizations could not.</p>
+          <div class="article-pullquote">"She wasn't asking us to agree with her religion. She was asking us to take seriously that her community had assets — not just physical ones — that we didn't have. And she was right."<br><br>— Darius Mwangi, neighborhood coalition director</div>
+          <p>The development broke ground in the spring of 2024. Thirty-eight units, permanently affordable, on land the church will never sell. At the groundbreaking, Pastor Cho and Darius Mwangi stood together at the podium. They did not agree on everything — they still don't — but they had learned to disagree in a way that left room for the other person to be right about something.</p>
+          <p>In the back row, a woman who had lived in the neighborhood for twenty-two years and attended the church for fifteen held both her neighbors' hands and did not say anything at all.</p>
+        `
+      }
+    };
+
+    function openStory(key) {
+      var s = stories[key];
+      if (!s) return;
+      handleStoryOpen(s.title);
+      document.getElementById('articleTag').textContent = s.tag;
+      document.getElementById('articleTitle').textContent = s.title;
+      document.getElementById('articleByline').textContent = s.byline;
+      document.getElementById('articleImage').style.background = s.imageBg;
+      document.getElementById('articleImage').innerHTML = '<span style="font-size:72px">' + s.image + '</span>';
+      document.getElementById('articleBody').innerHTML = s.body;
+      document.getElementById('overlay').classList.add('open');
+      document.getElementById('articlePanel').scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeStory() {
+      document.getElementById('overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('overlay')) closeStory();
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeStory();
+    });
+
     function submitSignup() {
       var email = document.getElementById("emailInput").value.trim();
       if (!email || !email.includes("@")) return;
